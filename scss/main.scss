@@ -89,6 +89,14 @@ body{
     margin:0;
   }
 
+  #chart{
+    display: block;
+    position: fixed;
+    width: 320px;
+    right:10em;
+    bottom: 0;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
@@ -102,6 +110,13 @@ body{
         display: none;
       }
     }
+
+    #chart{
+      display: none;
+
+    }
+
+
 }
 
 @media screen and (min-width: 1600px) {

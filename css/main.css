@@ -37,12 +37,21 @@ body {
     border-left-color: #efefef;
     padding-left: 1em;
     margin: 0; }
+  body #chart {
+    display: block;
+    position: fixed;
+    width: 320px;
+    right: 10em;
+    bottom: 0; }
 
 @media screen and (max-width: 480px) {
   body {
     margin-right: 0.4em; }
     body .nav {
-      display: none; } }
+      display: none; }
+
+  #chart {
+    display: none; } }
 @media screen and (min-width: 1600px) {
   body {
     margin-right: 0.4em; }
