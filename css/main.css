@@ -43,5 +43,14 @@ body {
     margin-right: 0.4em; }
     body .nav {
       display: none; } }
+@media screen and (min-width: 1600px) {
+  body {
+    margin-right: 0.4em; }
+    body h2 {
+      font-size: 32pt; }
+    body h3 {
+      font-size: 24pt; }
+    body p {
+      font-size: 16pt; } }
 
 /*# sourceMappingURL=main.css.map */

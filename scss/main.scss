@@ -103,3 +103,27 @@ body{
       }
     }
 }
+
+@media screen and (min-width: 1600px) {
+    body {
+
+
+      h2{
+        font-size: 32pt;
+      }
+
+      h3{
+        font-size: 24pt;
+
+      }
+
+      p{
+        font-size: 16pt;
+      }
+      margin:{
+        right:0.4em;
+
+      }
+
+    }
+}
