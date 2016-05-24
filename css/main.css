@@ -1,0 +1,47 @@
+@import url(https://fonts.googleapis.com/css?family=Abel);
+body {
+  background-color: #20c0d0;
+  color: #efefef;
+  margin: 0;
+  padding: 0;
+  font-family: 'Abel', 'Helvetica', 'sans-serif'; }
+  body .nav {
+    height: 1em;
+    float: right;
+    margin-right: 1em;
+    margin-top: 0;
+    margin-bottom: 0; }
+    body .nav img {
+      width: 50px; }
+  body .wrapper {
+    margin-top: 10em;
+    margin-bottom: 10em;
+    margin-left: 2em; }
+  body a {
+    color: #333333;
+    text-decoration: none;
+    padding-right: 2em; }
+  body h2 {
+    font-size: 24pt; }
+  body h3 {
+    font-size: 18pt; }
+  body p {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em; }
+  body .row {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em; }
+  body blockquote {
+    border-left-style: solid;
+    border-left-width: 0.2em;
+    border-left-color: #efefef;
+    padding-left: 1em;
+    margin: 0; }
+
+@media screen and (max-width: 480px) {
+  body {
+    margin-right: 0.4em; }
+    body .nav {
+      display: none; } }
+
+/*# sourceMappingURL=main.css.map */
