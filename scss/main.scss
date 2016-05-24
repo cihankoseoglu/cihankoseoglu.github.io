@@ -111,20 +111,20 @@ body{
       }
     }
 
-    #chart{
-      display: none;
-
-    }
-
-
 }
 
 
 @media screen and (max-width: 900px) {
-  
+
     #chart{
       display: none;
+      visibility: hidden;
+    }
 
+    svg{
+
+        display: none;
+        visibility: hidden;
     }
 
 
