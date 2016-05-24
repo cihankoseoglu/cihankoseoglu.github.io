@@ -119,6 +119,16 @@ body{
 
 }
 
+
+@media screen and (max-width: 900px) {
+  
+    #chart{
+      display: none;
+
+    }
+
+
+}
 @media screen and (min-width: 1600px) {
     body {
 
