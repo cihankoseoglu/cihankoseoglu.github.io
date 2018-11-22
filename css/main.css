@@ -6,65 +6,71 @@ body {
   padding: 0;
   font-family: 'Abel', 'Helvetica', 'sans-serif';
 }
-body .nav {
+
+.nav {
   height: 1em;
   float: right;
   margin-right: 1em;
   margin-top: 0;
   margin-bottom: 0;
 }
-body .nav img {
+.nav img {
   width: 50px;
 }
-body .wrapper {
+.wrapper {
   margin-top: 10em;
   margin-bottom: 10em;
   margin-left: 2em;
 }
-body a {
+a {
   color: #333;
+  font-size: 2em;
   text-decoration: none;
   padding-right: 2em;
 }
-body h2 {
+h2 {
   font-size: 24pt;
 }
-body h3 {
+h3 {
   font-size: 18pt;
 }
-body p {
+p {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
 }
-body .row {
+.row {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 }
-body blockquote {
+blockquote {
   border-left-style: solid;
   border-left-width: 0.2em;
   border-left-color: #efefef;
   padding-left: 1em;
   margin: 0;
 }
-body #chart {
+#chart {
   display: block;
   position: fixed;
   width: 320px;
   right: 10em;
   bottom: 0;
 }
-body #zeplin {
-  padding: 0;
-  margin: 0;
-  color: #efefef;
-  font-weight: bold;
+
+.spotify {
+  margin: 60px 0;
 }
+
+.links {
+  margin: 30px 0;
+}
+
+
 @media screen and (max-width: 480px) {
-  body {
+  {
     margin-right: 0.4em;
   }
-  body .nav {
+  .nav {
     display: none;
   }
 }
@@ -79,16 +85,16 @@ body #zeplin {
   }
 }
 @media screen and (min-width: 1600px) {
-  body {
+  {
     margin-right: 0.4em;
   }
-  body h2 {
+  h2 {
     font-size: 32pt;
   }
-  body h3 {
+  h3 {
     font-size: 24pt;
   }
-  body p {
+  p {
     font-size: 16pt;
   }
 }
