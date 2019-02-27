@@ -24,10 +24,14 @@ body {
 }
 a {
   color: #333;
-  font-size: 2em;
   text-decoration: none;
+}
+
+.links a {
+  font-size: 2em;
   padding-right: 2em;
 }
+
 h2 {
   font-size: 24pt;
 }
