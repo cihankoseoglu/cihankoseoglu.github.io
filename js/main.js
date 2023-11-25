@@ -11,8 +11,8 @@ w=480,h=260,svg=d3.select("#chart").append("svg").attr({width:w,height:h}).appen
 var grid,running=false,timer;
 var liveC="#efefef";
 
-svg.selectAll(".gridv").data(d3.range(48)).enter().append("path").attr("d",function(d) {return "M"+(20*d)+",0 v 500"}).style("stroke","#20c0d0");
-svg.selectAll(".gridv").data(d3.range(26)).enter().append("path").attr("d",function(d) {return "M0,"+(20*d)+" h 940"}).style("stroke","#20c0d0");
+svg.selectAll(".gridv").data(d3.range(48)).enter().append("path").attr("d",function(d) {return "M"+(20*d)+",0 v 500"}).style("stroke","#a51dac");
+svg.selectAll(".gridv").data(d3.range(26)).enter().append("path").attr("d",function(d) {return "M0,"+(20*d)+" h 940"}).style("stroke","#a51dac");
 
 reset();
 grid=d3.range(47).map(function(i) {return d3.range(25).map(function(j) {return {value:Math.random()>.85?1:0,row:j,col:i};})});
@@ -53,14 +53,14 @@ function drawGrid() {
 		return 20*d.row+1;
 	})
 	.attr({
-		x:1,width:18,height:18,rx:3,ry:3}).style({"stroke":"#20c0d0","fill":function(d) {return d.value?liveC:"#20c0d0"}})
+		x:1,width:18,height:18,rx:3,ry:3}).style({"stroke":"#a51dac","fill":function(d) {return d.value?liveC:"#a51dac"}})
 		.attr("id",function(d) {return "C"+d.row+"-"+d.col;})
 		.on("click", function(d) {
 			if(running){
 				stop();
 			}
 			var live=d.value=1-d.value;
-			d3.select(this).transition().style("fill",live?liveC:"#20c0d0");
+			d3.select(this).transition().style("fill",live?liveC:"#a51dac");
 		})
 }
 
@@ -136,7 +136,7 @@ function die(cell) {
 		.duration(1500)
 		.attr({"height":0,y:d.row*20+18})
 		.style("fill","#efefef")
-		.each("end",function() {d3.select(this).style("fill","#20c0d0");})
+		.each("end",function() {d3.select(this).style("fill","#a51dac");})
 }
 
 function rise(cell) {
