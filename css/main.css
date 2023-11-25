@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Abel);
 body {
-  background-color: rgb(110, 35, 101), 29, 172);
+  background-color: rgb(165, 29, 172);
   color: #efefef;
   margin: 0;
   padding: 0;
@@ -67,13 +67,14 @@ blockquote {
 
 
 @media screen and (max-width: 480px) {
-  {
+  body {
     margin-right: 0.4em;
   }
   .nav {
     display: none;
   }
 }
+
 @media screen and (max-width: 900px) {
   #chart {
     display: none;
@@ -84,8 +85,9 @@ blockquote {
     visibility: hidden;
   }
 }
+
 @media screen and (min-width: 1600px) {
-  {
+  body {
     margin-right: 0.4em;
   }
   h2 {
