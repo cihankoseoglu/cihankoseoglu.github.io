@@ -1,69 +1,151 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
-    <head>
-        <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-P5KM7P2');</script>
-<!-- End Google Tag Manager -->
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>cihankoseoglu.com -- mainpage</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="css/main.css">
-    </head>
-    <body>
-        <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5KM7P2"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P5KM7P2');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cihan Koseoglu</title>
+  <meta name="description" content="Cihan Koseoglu: marketing, data, privacy, measurement, AI and code. Also a musician. Based in Istanbul.">
+  <meta property="og:title" content="Cihan Koseoglu">
+  <meta property="og:description" content="Marketing, data, privacy, measurement, AI and code. Also a musician.">
+  <meta property="og:url" content="https://www.cihankoseoglu.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://www.cihankoseoglu.com/">
+  <link rel="icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --text: #1d1b19;
+      --muted: #6b6560;
+      --line: #e6e1da;
+      --accent: #8a2be2;
+      --accent-soft: #f1e8fb;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 17px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .life {
+      display: block;
+      width: 100%;
+      height: clamp(160px, 26vh, 260px);
+      cursor: crosshair;
+      touch-action: none;
+      -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent);
+              mask-image: linear-gradient(to bottom, #000 40%, transparent);
+    }
+    .life-hint { max-width: 640px; margin: -28px auto 0; padding: 0 20px; font-size: 13px; color: var(--muted); position: relative; pointer-events: none; }
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    header { margin-bottom: 48px; }
+    .llap { display: inline-block; margin-bottom: 28px; }
+    .llap img { width: 36px; height: auto; display: block; transition: transform .3s; filter: invert(1) opacity(.75); }
+    .llap:hover img { transform: rotate(-12deg); }
+    h1 {
+      font: 400 clamp(44px, 9vw, 64px)/1.05 "Instrument Serif", Georgia, serif;
+      letter-spacing: -0.01em;
+      margin: 0 0 14px;
+    }
+    .tagline { color: var(--muted); font-size: 19px; margin: 0; }
+    section { margin-bottom: 44px; }
+    h2 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    p { margin: 0 0 14px; }
+    a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+    a:hover { border-bottom-color: currentColor; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 0; list-style: none; }
+    .links a {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 15px;
+      transition: background .2s, border-color .2s;
+    }
+    .links a:hover { background: var(--accent-soft); border-color: var(--accent); }
+    blockquote {
+      margin: 0;
+      padding: 4px 0 4px 20px;
+      border-left: 2px solid var(--accent);
+      font: 400 24px/1.35 "Instrument Serif", Georgia, serif;
+    }
+    blockquote cite { display: block; margin-top: 8px; font: 400 14px Inter, system-ui, sans-serif; color: var(--muted); font-style: normal; }
+    footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5KM7P2" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <canvas id="life" class="life" aria-label="Conway's Game of Life. Click or drag to add cells." role="img"></canvas>
+  <p class="life-hint">Conway's Game of Life. Click or drag to add cells.</p>
+  <main>
+    <header>
+      <a class="llap" href="https://www.youtube.com/watch?v=fHAOWLhrxhQ" aria-label="Live long and prosper"><img src="images/llap.png" alt=""></a>
+      <h1>Cihan Koseoglu</h1>
+      <p class="tagline">All things marketing, data, privacy, measurement, AI and code. Also a musician.</p>
+    </header>
 
-        <div class="nav">
-          <a href="https://www.youtube.com/watch?v=fHAOWLhrxhQ"><img src="images/llap.png" alt="Live long and prosper"></a>
-        </div>
+    <section>
+      <h2>About</h2>
+      <p>I'm based in Istanbul, Turkey.</p>
+      <p>Engagement Manager at <a href="https://google.com">Google</a>. My job basically is to solve problems for large advertisers and ensure delivery.</p>
+      <p>Previously at Google, I led privacy-centric measurement and data for the Turkish market and also served as product lead for Google Analytics 4. Before that I co-founded PeopleApps and worked at CloudOne, Homicity and Zeplin.</p>
+      <p>BSc. Computer Engineering and MSc. International Management at Koç University, MIB at the University of South Carolina.</p>
+    </section>
 
-        <div class="wrapper">
-          <div class="row">
-            <h2>cihan koseoglu</h2>
-            <h3>all things data, privacy, measurement and code. also a musician.</h3>
-          </div>
+    <section>
+      <h2>Outside work</h2>
+      <p>I've been playing electric guitar since I was 12, and I'm also a singer. Hobbies include reading, collecting guitar gear, photography, painting and walking.</p>
+      <p>You can find my music under Cihan Koseoglu, Insuline, Gezemedim Evreni and Dinar Bandosu.</p>
+    </section>
 
-          <div class="row">
-            <p>Hello, this is Cihan</p>    
-            <p>BSc. Computer Engineering, MSc. International Management @Koc University, MIB @University of South Carolina</p>
-            <p>I'm based in Istanbul, Turkey.</p>
-            <p>Sr. Data and Measurement Lead @ <a href="https://google.com">Google.</a> Previous experience: Co-founded PeopleApps, worked at CloudOne, Homicity and Zeplin.</p>
-            <p>I lead privacy centric measurement and data at Google for the Turkish market. Currently also serving as Global Product Lead for Google Analytics 4.</p>            
-            <p>I've been playing electric guitar since I was 12. I've also been singing for the past couple years. My biggest hobby is collecting/reading about guitar pedals, instruments.</p>            
-            <p>You can check my music out under Cihan Koseoglu, Insuline, Gezemedim Evreni and Dinar Bandosu.</p>
-            <p>Feel free to reach me, let's have a cup of coffee.</p>            
-          </div>
-         
-          <div class="row links">            
-            <a href="http://www.twitter.com/cihankoseoglu">Twitter</a>
-            <a href="https://www.youtube.com/channel/UCc_HtFNXwV-jQmqo6eE97eg">Youtube</a>
-            <a href="http://www.linkedin.com/in/cihankoseoglu">Linkedin</a>          
-          </div>
+    <section>
+      <h2>Say hi</h2>
+      <p>Feel free to reach out. Let's have a cup of coffee.</p>
+      <ul class="links">
+        <li><a href="https://x.com/cihankoseoglu">X / Twitter</a></li>
+        <li><a href="https://www.youtube.com/channel/UCc_HtFNXwV-jQmqo6eE97eg">YouTube</a></li>
+        <li><a href="https://www.linkedin.com/in/cihankoseoglu">LinkedIn</a></li>
+      </ul>
+    </section>
 
-          <div class="row">
-            <blockquote>
-              <p>Somewhere, something incredible is waiting to be known.</p>
-              <p>Carl Sagan</p>
-            </blockquote>
-          </div>
-          <div id="chart"></div>
-        </div>
-        <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script src="js/main.js"></script>
-    </body>
+    <section>
+      <blockquote>
+        Somewhere, something incredible is waiting to be known.
+        <cite>Carl Sagan</cite>
+      </blockquote>
+    </section>
+
+    <footer>© <span id="y">2026</span> Cihan Koseoglu</footer>
+  </main>
+  <script src="js/life.js"></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
 </html>
