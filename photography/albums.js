@@ -456,12 +456,12 @@ window.ALBUMS = [
    {
     "src": "/photography/photos/vienna/01.jpg",
     "w": 2400,
-    "h": 1601
+    "h": 1600
    },
    {
     "src": "/photography/photos/vienna/02.jpg",
     "w": 2400,
-    "h": 1648
+    "h": 1600
    },
    {
     "src": "/photography/photos/vienna/03.jpg",
@@ -515,8 +515,8 @@ window.ALBUMS = [
    },
    {
     "src": "/photography/photos/vienna/13.jpg",
-    "w": 1601,
-    "h": 2400
+    "w": 2400,
+    "h": 1601
    },
    {
     "src": "/photography/photos/vienna/14.jpg",
@@ -540,8 +540,8 @@ window.ALBUMS = [
    },
    {
     "src": "/photography/photos/vienna/18.jpg",
-    "w": 2400,
-    "h": 1601
+    "w": 1601,
+    "h": 2400
    },
    {
     "src": "/photography/photos/vienna/19.jpg",
@@ -576,12 +576,12 @@ window.ALBUMS = [
    {
     "src": "/photography/photos/vienna/25.jpg",
     "w": 2400,
-    "h": 1290
+    "h": 1601
    },
    {
     "src": "/photography/photos/vienna/26.jpg",
-    "w": 2400,
-    "h": 1601
+    "w": 1601,
+    "h": 2400
    },
    {
     "src": "/photography/photos/vienna/27.jpg",
@@ -630,8 +630,8 @@ window.ALBUMS = [
    },
    {
     "src": "/photography/photos/vienna/36.jpg",
-    "w": 1601,
-    "h": 2400
+    "w": 2400,
+    "h": 1601
    },
    {
     "src": "/photography/photos/vienna/37.jpg",
@@ -645,8 +645,8 @@ window.ALBUMS = [
    },
    {
     "src": "/photography/photos/vienna/39.jpg",
-    "w": 2400,
-    "h": 1601
+    "w": 1601,
+    "h": 2400
    },
    {
     "src": "/photography/photos/vienna/40.jpg",
@@ -665,8 +665,8 @@ window.ALBUMS = [
    },
    {
     "src": "/photography/photos/vienna/43.jpg",
-    "w": 1601,
-    "h": 2400
+    "w": 2400,
+    "h": 1601
    },
    {
     "src": "/photography/photos/vienna/44.jpg",
