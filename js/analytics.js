@@ -19,23 +19,29 @@
   }
 
   // Clicks: album links (select_content) and social profile links.
-  var SOCIAL = { 'x.com': 'x', 'twitter.com': 'x', 'youtube.com': 'youtube', 'linkedin.com': 'linkedin' };
+  var SOCIAL = { 'x.com': 'x', 'twitter.com': 'x', 'youtube.com': 'youtube', 'linkedin.com': 'linkedin',
+                 'open.spotify.com': 'spotify' };
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a');
     if (!a || !a.href) return;
+    if (a.classList.contains('email')) {
+      track('select_content', { content_type: 'contact', content_id: 'email', link_location: 'say_hi' });
+      return;
+    }
     var url = new URL(a.href, location.href);
     var host = url.hostname.replace(/^www\./, '');
 
     if (SOCIAL[host]) {
       track('select_content', { content_type: 'social_profile', content_id: SOCIAL[host],
-                                social_platform: SOCIAL[host], link_location: 'say_hi' });
+                                social_platform: SOCIAL[host], link_location: a.closest('.links') ? 'say_hi' : 'outside_work' });
       return;
     }
     if (url.pathname.indexOf('/photography') !== 0) return;
     var slug = slugFromHash(url.hash);
     var where = a.classList.contains('photo-link') ? 'home_strip'
               : a.classList.contains('next') ? 'next_album'
-              : a.classList.contains('cover') ? 'album_index' : 'other';
+              : a.classList.contains('cover') ? 'album_index'
+              : a.closest('.row') ? 'album_row' : 'other';
     track('select_content', { content_type: slug ? 'album' : 'photography_index',
                               content_id: slug || 'photography', link_location: where });
   }, true);

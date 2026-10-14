@@ -2,16 +2,27 @@
 """Manage the albums on cihankoseoglu.com/photography.
 
   python3 _build/album.py list
-  python3 _build/album.py add "/path/to/photos" ["/another/folder" ...] [--title "Name"] [--year 2026] [--date 2026-03]
+  python3 _build/album.py add "/path/to/photos" ["/another/folder" ...] [--title "Name"] [--year 2026] [--date 2026-03] [--cover NN]
   python3 _build/album.py remove <slug>
   python3 _build/album.py rename <slug> "New Title"
+  python3 _build/album.py set-cover <slug> NN
   python3 _build/album.py covers
+  python3 _build/album.py sizes
 
 `add` takes one or more folders of photos (combined into one album). If a folder has a "selected" subfolder, only
 that is used. Photos are taken in file-name order, resized to 2400px on the
 long edge, saved as JPEG with all metadata (including GPS) removed, and written
-to photography/photos/<slug>/NN.jpg. The first photo is the album cover.
+to photography/photos/<slug>/NN.jpg, plus NN-1200.jpg (1200px) for phones and
+smaller screens. The first photo is the album cover and opens the album; pass
+--cover NN to move photo NN to the front instead (or use set-cover later).
 Adding an album whose slug already exists replaces it.
+
+Each photo can have an "alt" text in albums.js (edit it by hand). Alt texts are
+kept when an album is re-added, matched by photo position. Every save also
+writes photography/covers.js, a small list the home page uses.
+
+`sizes` creates any missing NN-1200.jpg files from the 2400px files in the repo.
+`covers` regenerates cover.jpg (1600px) and cover-400.jpg for every album.
 
 Needs Pillow. RAW/HEIC files are converted with macOS `sips` first.
 """
@@ -21,11 +32,15 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(REPO, 'photography', 'albums.js')
 PHOTOS = os.path.join(REPO, 'photography', 'photos')
 LONG_EDGE = 2400
-COVER_EDGE = 900
+MID_EDGE = 1200
+COVER_EDGE = 1600
+THUMB_EDGE = 400
 QUALITY = 82
 IMAGE_EXT = {'.jpg', '.jpeg', '.png', '.tif', '.tiff', '.webp', '.heic', '.heif',
              '.dng', '.cr2', '.cr3', '.nef', '.arw', '.raf', '.orf', '.rw2'}
-HEADER = '// Albums for /photography, newest first. Managed by _build/album.py; titles can be edited by hand.\n'
+HEADER = '// Albums for /photography, newest first. Managed by _build/album.py; titles and alt texts can be edited by hand.\n'
+COVERS = os.path.join(REPO, 'photography', 'covers.js')
+COVERS_HEADER = '// Written by _build/album.py from albums.js: one line per album for the home page. Do not edit.\n'
 
 
 def load():
@@ -40,6 +55,37 @@ def save(albums):
     albums.sort(key=lambda x: x.get('date') or str(x.get('year') or ''), reverse=True)
     with open(DATA, 'w', encoding='utf-8') as fh:
         fh.write(HEADER + 'window.ALBUMS = ' + json.dumps(albums, indent=1, ensure_ascii=False) + ';\n')
+    covers = [{'slug': x['slug'], 'title': x['title'], 'year': x.get('year'), 'cover': x.get('cover'),
+               'thumb': x.get('thumb'), 'count': len(x['photos'])} for x in albums]
+    with open(COVERS, 'w', encoding='utf-8') as fh:
+        fh.write(COVERS_HEADER + 'window.ALBUM_COVERS = [\n' +
+                 ',\n'.join(' ' + json.dumps(c, ensure_ascii=False) for c in covers) + '\n];\n')
+
+
+def path_of(src):
+    return os.path.join(REPO, src.lstrip('/'))
+
+
+def mid_path(path):
+    return path[:-4] + '-1200.jpg'
+
+
+def save_jpeg(im, path, icc, edge=None, quality=QUALITY):
+    """Resize (if edge is given) and save without any EXIF/GPS metadata; only the colour profile is kept."""
+    from PIL import Image
+    if edge:
+        im = im.copy()
+        im.thumbnail((edge, edge), Image.LANCZOS)
+    im.save(path, 'JPEG', quality=quality, optimize=True, progressive=True, icc_profile=icc)
+    return im
+
+
+def make_mid(path):
+    """Write NN-1200.jpg next to a 2400px NN.jpg."""
+    from PIL import Image
+    im = Image.open(path)
+    icc = im.info.get('icc_profile')
+    save_jpeg(im.convert('RGB'), mid_path(path), icc, MID_EDGE)
 
 
 def slugify(s):
@@ -100,15 +146,39 @@ def open_image(path, tmpdir):
 
 
 def make_cover(album):
-    """Write a small cover.jpg (from the first photo) for the home page strip and set album["cover"]."""
+    """Write cover.jpg (1600px, album index) and cover-400.jpg (home page and album row) from the first photo."""
     from PIL import Image
     slug = album['slug']
-    im = Image.open(os.path.join(REPO, album['photos'][0]['src'].lstrip('/')))
+    im = Image.open(path_of(album['photos'][0]['src']))
     icc = im.info.get('icc_profile')
     im = im.convert('RGB')
-    im.thumbnail((COVER_EDGE, COVER_EDGE), Image.LANCZOS)
-    im.save(os.path.join(PHOTOS, slug, 'cover.jpg'), 'JPEG', quality=80, optimize=True, progressive=True, icc_profile=icc)
+    save_jpeg(im, os.path.join(PHOTOS, slug, 'cover.jpg'), icc, COVER_EDGE, 80)
+    save_jpeg(im, os.path.join(PHOTOS, slug, 'cover-400.jpg'), icc, THUMB_EDGE, 78)
     album['cover'] = f'/photography/photos/{slug}/cover.jpg'
+    album['thumb'] = f'/photography/photos/{slug}/cover-400.jpg'
+
+
+def move_to_front(album, n):
+    """Make photo number n (1-based, as shown in its caption) the first photo, renaming files to keep NN in order."""
+    photos = album['photos']
+    if not 1 <= n <= len(photos):
+        sys.exit(f'Photo {n} does not exist; {album["slug"]} has {len(photos)} photos.')
+    photos.insert(0, photos.pop(n - 1))
+    slug = album['slug']
+    renames = []
+    for i, p in enumerate(photos, 1):
+        old = path_of(p['src'])
+        p['src'] = f'/photography/photos/{slug}/{i:02d}.jpg'
+        renames.append((old, path_of(p['src'])))
+    # Two passes through temporary names so nothing is overwritten.
+    for old, new in renames:
+        for a, b in ((old, new), (mid_path(old), mid_path(new))):
+            if os.path.exists(a):
+                os.rename(a, b + '.tmp')
+    for old, new in renames:
+        for b in (new, mid_path(new)):
+            if os.path.exists(b + '.tmp'):
+                os.rename(b + '.tmp', b)
 
 
 def cmd_add(a):
@@ -139,14 +209,21 @@ def cmd_add(a):
             im.thumbnail((LONG_EDGE, LONG_EDGE), Image.LANCZOS)
             name = f'{i:02d}.jpg'
             # No exif= argument, so no camera or GPS metadata is written; only the colour profile is kept.
-            im.save(os.path.join(dest, name), 'JPEG', quality=QUALITY, optimize=True, progressive=True, icc_profile=icc)
+            save_jpeg(im, os.path.join(dest, name), icc)
+            save_jpeg(im, mid_path(os.path.join(dest, name)), icc, MID_EDGE)
             photos.append({'src': f'/photography/photos/{slug}/{name}', 'w': im.width, 'h': im.height})
             print(f'  {i}/{len(sources)}', end='\r', flush=True)
     date = a.date or guess_date(folder) or (str(year) if year else None)
     album = {'slug': slug, 'title': title, 'year': year, 'date': date, 'photos': photos}
-    make_cover(album)
     albums = load()
     existing = [i for i, x in enumerate(albums) if x['slug'] == slug]
+    if existing:  # keep hand-written alt texts, matched by position
+        for p, old in zip(photos, albums[existing[0]]['photos']):
+            if old.get('alt'):
+                p['alt'] = old['alt']
+    if a.cover:
+        move_to_front(album, a.cover)
+    make_cover(album)
     if existing:
         albums[existing[0]] = album
     else:
@@ -177,6 +254,33 @@ def cmd_rename(a):
     sys.exit(f'No album with slug {a.slug}.')
 
 
+def find(albums, slug):
+    for x in albums:
+        if x['slug'] == slug:
+            return x
+    sys.exit(f'No album with slug {slug}. Run "list" to see them.')
+
+
+def cmd_set_cover(a):
+    albums = load()
+    album = find(albums, a.slug)
+    move_to_front(album, a.number)
+    make_cover(album)
+    save(albums)
+    print(f'Photo {a.number} is now the cover of {a.slug}')
+
+
+def cmd_sizes(a):
+    made = 0
+    for x in load():
+        for p in x['photos']:
+            path = path_of(p['src'])
+            if not os.path.exists(mid_path(path)):
+                make_mid(path)
+                made += 1
+    print(f'Made {made} 1200px files')
+
+
 def cmd_covers(a):
     albums = load()
     for x in albums:
@@ -194,11 +298,15 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
     p = sub.add_parser('add'); p.add_argument('folder', nargs='+', help='one or more photo folders, combined in this order'); p.add_argument('--title'); p.add_argument('--year', type=int)
-    p.add_argument('--slug'); p.add_argument('--date', help='YYYY-MM, used for ordering'); p.set_defaults(f=cmd_add)
+    p.add_argument('--slug'); p.add_argument('--date', help='YYYY-MM, used for ordering')
+    p.add_argument('--cover', type=int, metavar='NN', help='use photo NN as the cover (it opens the album)'); p.set_defaults(f=cmd_add)
     p = sub.add_parser('remove'); p.add_argument('slug'); p.set_defaults(f=cmd_remove)
     p = sub.add_parser('rename'); p.add_argument('slug'); p.add_argument('title'); p.set_defaults(f=cmd_rename)
     p = sub.add_parser('list'); p.set_defaults(f=cmd_list)
-    p = sub.add_parser('covers', help='regenerate cover.jpg for every album'); p.set_defaults(f=cmd_covers)
+    p = sub.add_parser('set-cover', help='make photo NN the cover and first photo of an album')
+    p.add_argument('slug'); p.add_argument('number', type=int, metavar='NN'); p.set_defaults(f=cmd_set_cover)
+    p = sub.add_parser('covers', help='regenerate cover.jpg and cover-400.jpg for every album'); p.set_defaults(f=cmd_covers)
+    p = sub.add_parser('sizes', help='create missing NN-1200.jpg files for existing albums'); p.set_defaults(f=cmd_sizes)
     a = ap.parse_args()
     a.f(a)
 

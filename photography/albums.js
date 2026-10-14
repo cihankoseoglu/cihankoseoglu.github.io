@@ -1,4 +1,4 @@
-// Albums for /photography, newest first. Managed by _build/album.py; titles can be edited by hand.
+// Albums for /photography, newest first. Managed by _build/album.py; titles and alt texts can be edited by hand.
 window.ALBUMS = [
  {
   "slug": "sariyer",
@@ -8,13 +8,13 @@ window.ALBUMS = [
   "photos": [
    {
     "src": "/photography/photos/sariyer/01.jpg",
-    "w": 2400,
-    "h": 675
+    "w": 1601,
+    "h": 2400
    },
    {
     "src": "/photography/photos/sariyer/02.jpg",
-    "w": 1601,
-    "h": 2400
+    "w": 2400,
+    "h": 675
    },
    {
     "src": "/photography/photos/sariyer/03.jpg",
@@ -177,21 +177,23 @@ window.ALBUMS = [
     "h": 675
    }
   ],
-  "cover": "/photography/photos/sariyer/cover.jpg"
+  "cover": "/photography/photos/sariyer/cover.jpg",
+  "thumb": "/photography/photos/sariyer/cover-400.jpg"
  },
  {
-  "slug": "perseid-meteor-shower",
-  "title": "Perseid Meteor Shower",
+  "slug": "unmarked-01",
+  "title": "unmarked // 01",
   "year": 2026,
   "date": "2026-08",
   "photos": [
    {
-    "src": "/photography/photos/perseid-meteor-shower/01.jpg",
+    "src": "/photography/photos/unmarked-01/01.jpg",
     "w": 2400,
     "h": 1601
    }
   ],
-  "cover": "/photography/photos/perseid-meteor-shower/cover.jpg"
+  "cover": "/photography/photos/unmarked-01/cover.jpg",
+  "thumb": "/photography/photos/unmarked-01/cover-400.jpg"
  },
  {
   "slug": "stockholm",
@@ -445,7 +447,8 @@ window.ALBUMS = [
     "h": 1920
    }
   ],
-  "cover": "/photography/photos/stockholm/cover.jpg"
+  "cover": "/photography/photos/stockholm/cover.jpg",
+  "thumb": "/photography/photos/stockholm/cover-400.jpg"
  },
  {
   "slug": "vienna",
@@ -689,7 +692,8 @@ window.ALBUMS = [
     "h": 1601
    }
   ],
-  "cover": "/photography/photos/vienna/cover.jpg"
+  "cover": "/photography/photos/vienna/cover.jpg",
+  "thumb": "/photography/photos/vienna/cover-400.jpg"
  },
  {
   "slug": "paris-madrid",
@@ -843,6 +847,7 @@ window.ALBUMS = [
     "h": 1291
    }
   ],
-  "cover": "/photography/photos/paris-madrid/cover.jpg"
+  "cover": "/photography/photos/paris-madrid/cover.jpg",
+  "thumb": "/photography/photos/paris-madrid/cover-400.jpg"
  }
 ];

@@ -1,33 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1LPFGZTQRZ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    // Consent Mode: analytics cookies stay off until the visitor accepts (see /js/consent.js).
-    var consent; try { consent = localStorage.getItem('consent'); } catch (e) {}
-    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
-                                 analytics_storage: consent === 'granted' ? 'granted' : 'denied' });
-    gtag('js', new Date());
-    gtag('config', 'G-1LPFGZTQRZ');
-  </script>
+  <script src="/js/gtag.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Photography · Cihan Koseoglu</title>
   <meta name="description" content="Photography by Cihan Koseoglu.">
   <link rel="icon" href="/images/favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#f7f7f7">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
   <style>
     /* Template C: "Essay". Big album covers stacked, then each album reads top to bottom like a photo book. */
-    :root { --bg: #f7f7f7; --text: #1d1b19; --muted: #8a847d; --line: #e3ddd4; --accent: #8a2be2; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.6 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    :root { --bg: #f7f7f7; --line: #e3ddd4; }
+    body { background: var(--bg); font-size: 15px; line-height: 1.6; }
     a { color: inherit; text-decoration: none; }
-    .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
     header { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: baseline; padding: 20px clamp(16px, 4vw, 56px); mix-blend-mode: difference; color: #fff; }
     header .here { opacity: .8; }
     .progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0; z-index: 6; }
@@ -36,23 +24,38 @@
     .intro { padding: 22vh clamp(16px, 4vw, 56px) 10vh; max-width: 900px; }
     .intro h1 { font-size: clamp(48px, 9vw, 112px); line-height: .95; margin: 0 0 18px; letter-spacing: -0.02em; }
     .intro p { color: var(--muted); margin: 0; max-width: 460px; }
+    /* All albums at a glance; scrolls sideways on phones */
+    .row { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 36px 0 0; padding: 0; list-style: none; }
+    .row a { display: flex; align-items: center; gap: 10px; }
+    .row img { width: 44px; height: 44px; object-fit: cover; display: block; background: var(--line); flex: none; }
+    .row b { display: block; font: 400 20px/1.1 var(--serif); transition: color .2s; white-space: nowrap; }
+    .row small { color: var(--muted); font-size: 13px; }
+    .row a:hover b { color: var(--accent); font-style: italic; }
+    @media (max-width: 700px) {
+      .row { flex-wrap: nowrap; overflow-x: auto; margin-right: calc(-1 * clamp(16px, 4vw, 56px)); padding-right: 16px;
+             scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      .row::-webkit-scrollbar { display: none; }
+      .row li { flex: none; }
+    }
     .cover { display: block; position: relative; margin: 0 clamp(16px, 4vw, 56px) 14vh; }
-    .cover img { width: 100%; height: 78vh; object-fit: cover; display: block; background: var(--line); }
+    /* Covers keep their own shape: full width, or narrower when 78vh tall would be too much. --r is width / height. */
+    .cover img { display: block; width: min(100%, calc(78vh * var(--r))); height: auto; aspect-ratio: var(--r); background: var(--line); }
     .cover .label { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; }
     .cover .label h2 { font-size: clamp(32px, 5vw, 56px); margin: 0; line-height: 1; transition: color .2s; }
     .cover:hover h2 { color: var(--accent); font-style: italic; }
     .cover .label span { color: var(--muted); }
 
     /* Essay */
-    .essay-head { min-height: 92vh; display: grid; align-content: end; padding: 0 clamp(16px, 4vw, 56px) 8vh; background-size: cover; background-position: center; color: #fff; position: relative; }
-    .essay-head::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.45), transparent 55%); }
-    .essay-head > * { position: relative; }
+    .essay-head { min-height: 92vh; display: grid; align-content: end; padding: 0 clamp(16px, 4vw, 56px) 8vh; color: #fff; position: relative; overflow: hidden; background: var(--text); }
+    .essay-head > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .essay-head::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0,0,0,.45), transparent 55%); }
+    .essay-head > h1, .essay-head > p { position: relative; z-index: 2; }
     .essay-head h1 { font-size: clamp(48px, 10vw, 128px); line-height: .95; margin: 0 0 12px; }
     .essay-head p { margin: 0; opacity: .85; }
     .essay { padding: 14vh clamp(16px, 4vw, 56px) 4vh; }
     .essay figure { margin: 0 auto 14vh; }
     .essay img { width: 100%; height: auto; display: block; background: var(--line); }
-    .essay figcaption { margin-top: 10px; color: var(--muted); font-size: 12px; }
+    .essay figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; }
     .essay .full { max-width: 100%; }
     .essay .inset { max-width: 980px; }
     .essay .narrow { max-width: 620px; }
@@ -84,58 +87,109 @@
   <script src="/photography/albums.js"></script>
   <script>
     var app = document.getElementById('app'), here = document.getElementById('here'), progress = document.getElementById('progress');
+    var SITE = 'Cihan Koseoglu';
     var find = function (slug) { return ALBUMS.filter(function (a) { return a.slug === slug; })[0]; };
     var kind = function (p) { var r = p.w / p.h; return r > 1.15 ? 'land' : r < 0.87 ? 'port' : 'sq'; };
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+
+    // Small DOM helper: el('a', { className: 'x', href: '#' }, child, 'text', ...)
+    function el(tag, props) {
+      var node = document.createElement(tag);
+      for (var k in props || {}) {
+        if (k === 'style') node.setAttribute('style', props[k]);
+        else node[k] = props[k];
+      }
+      for (var i = 2; i < arguments.length; i++) {
+        var c = arguments[i];
+        if (c != null) node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      }
+      return node;
+    }
+
+    // Every photo has NN.jpg (2400px) and NN-1200.jpg; the browser picks one from srcset and sizes.
+    function photo(p, sizes, alt, lazy) {
+      var long = Math.max(p.w, p.h), img = el('img', { alt: alt, width: p.w, height: p.h, sizes: sizes });
+      if (long > 1200) img.srcset = p.src.replace(/\.jpg$/, '-1200.jpg') + ' ' + Math.round(p.w * 1200 / long) + 'w, ' + p.src + ' ' + p.w + 'w';
+      img.src = p.src;
+      if (lazy) img.loading = 'lazy';
+      return img;
+    }
+    var altFor = function (album, p, n) { return p.alt || album.title + ', photo ' + n + ' of ' + album.photos.length; };
+    var meta = function (a) { return a.year + ' · ' + a.photos.length + (a.photos.length === 1 ? ' photo' : ' photos'); };
 
     function renderList() {
       here.textContent = 'Photography';
-      app.innerHTML =
-        '<section class="intro"><h1 class="serif">Photography</h1><p>Albums, newest first. Click one to read it from start to finish.</p></section>' +
-        ALBUMS.map(function (a) {
-          return '<a class="cover fade" href="#/' + a.slug + '"><img src="' + a.photos[0].src + '" alt="" loading="lazy">' +
-            '<div class="label"><h2 class="serif">' + a.title + '</h2><span>' + a.year + ' · ' + a.photos.length + ' photos</span></div></a>';
-        }).join('');
+      document.title = 'Photography · ' + SITE;
+      var row = el('ul', { className: 'row' });
+      ALBUMS.forEach(function (a) {
+        row.appendChild(el('li', null, el('a', { href: '#/' + a.slug },
+          el('img', { src: a.thumb || a.cover, alt: '', width: 44, height: 44 }),
+          el('span', null, el('b', null, a.title), el('small', null, String(a.year))))));
+      });
+      app.replaceChildren(el('section', { className: 'intro' },
+        el('h1', { className: 'serif' }, 'Photography'),
+        el('p', null, 'Albums, newest first. Click one to read it from start to finish.'),
+        row));
+      ALBUMS.forEach(function (a) {
+        var p = a.photos[0], r = (p.w / p.h).toFixed(4);
+        var img = el('img', { src: a.cover, alt: 'Cover of the ' + a.title + ' album', loading: 'lazy', style: '--r:' + r,
+                              width: p.w, height: p.h, sizes: 'min(calc(100vw - 32px), calc(78vh * ' + r + '))' });
+        if (a.thumb) img.srcset = a.thumb + ' ' + Math.round(400 * Math.min(1, p.w / p.h)) + 'w, ' + a.cover + ' ' + Math.round(1600 * Math.min(1, p.w / p.h)) + 'w';
+        app.appendChild(el('a', { className: 'cover fade', href: '#/' + a.slug }, img,
+          el('div', { className: 'label' }, el('h2', { className: 'serif' }, a.title), el('span', null, meta(a)))));
+      });
     }
 
     // Lay photos out with a rhythm: landscapes alternate between full width and offset,
     // two portraits in a row become a pair, squares sit narrow and centred.
-    function layout(photos) {
-      var out = [], wide = 0, i = 0;
+    var SIZES = {
+      full: '100vw', inset: '(max-width: 1090px) 100vw, 980px', left: '(max-width: 870px) 100vw, 760px',
+      right: '(max-width: 870px) 100vw, 760px', narrow: '(max-width: 730px) 100vw, 620px', pair: '(max-width: 700px) 100vw, 50vw'
+    };
+    function layout(album, start) {
+      var photos = album.photos, frag = document.createDocumentFragment(), wide = 0, i = start;
       var fig = function (p, n, cls) {
-        return '<figure class="fade ' + (cls || '') + '"><img src="' + p.src + '" alt="" loading="lazy" width="' + p.w + '" height="' + p.h + '"><figcaption>' + String(n).padStart(2, '0') + '</figcaption></figure>';
+        return el('figure', { className: 'fade ' + (cls === 'pair' ? '' : cls) },
+          photo(p, SIZES[cls], altFor(album, p, n), true),
+          el('figcaption', null, pad(n) + ' / ' + photos.length));
       };
       while (i < photos.length) {
         var p = photos[i], k = kind(p);
         if (k === 'port' && photos[i + 1] && kind(photos[i + 1]) !== 'land') {
-          out.push('<div class="pair-wrap"><div class="pair">' + fig(p, i + 1) + fig(photos[i + 1], i + 2) + '</div></div>');
+          frag.appendChild(el('div', { className: 'pair-wrap' }, el('div', { className: 'pair' }, fig(p, i + 1, 'pair'), fig(photos[i + 1], i + 2, 'pair'))));
           i += 2; continue;
         }
-        if (k === 'land') out.push(fig(p, i + 1, ['full', 'left', 'inset', 'right'][wide++ % 4]));
-        else out.push(fig(p, i + 1, 'narrow'));
+        frag.appendChild(fig(p, i + 1, k === 'land' ? ['full', 'left', 'inset', 'right'][wide++ % 4] : 'narrow'));
         i++;
       }
-      return out.join('');
+      return frag;
     }
 
     function renderAlbum(album) {
       here.textContent = 'All albums';
-      var idx = ALBUMS.indexOf(album), next = ALBUMS[(idx + 1) % ALBUMS.length];
-      app.innerHTML =
-        '<section class="essay-head" style="background-image:url(' + album.photos[0].src + ')"><h1 class="serif">' + album.title + '</h1><p>' + album.year + ' · ' + album.photos.length + ' photos</p></section>' +
-        '<section class="essay">' + layout(album.photos.slice(1)) + '</section>' +
-        '<a class="next" href="#/' + next.slug + '"><span>Next album</span><h2 class="serif">' + next.title + '</h2></a>';
-      // captions start at 02 because photo 01 is the header
-      app.querySelectorAll('.essay figcaption').forEach(function (c) { c.textContent = String(+c.textContent + 1).padStart(2, '0') + ' / ' + album.photos.length; });
+      document.title = album.title + ' · Photography · ' + SITE;
+      var idx = ALBUMS.indexOf(album), next = ALBUMS[(idx + 1) % ALBUMS.length], first = album.photos[0];
+      // The first photo (the cover) fills the header; the rest are numbered from 02.
+      var head = photo(first, 'max(100vw, calc(92vh * ' + (first.w / first.h).toFixed(4) + '))', altFor(album, first, 1), false);
+      app.replaceChildren(
+        el('section', { className: 'essay-head' }, head, el('h1', { className: 'serif' }, album.title), el('p', null, meta(album))),
+        el('section', { className: 'essay' }, layout(album, 1)),
+        el('a', { className: 'next', href: '#/' + next.slug }, el('span', null, 'Next album'), el('h2', { className: 'serif' }, next.title)));
     }
 
     var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' }) : null;
 
+    // Coming back from an album to the index puts you where you were on the index.
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    var onList = false, listScroll = 0;
     function route() {
       var slug = location.hash.replace(/^#\/?/, '').split('/')[0], album = slug && find(slug);
+      if (onList) listScroll = scrollY;
+      onList = !album;
       album ? renderAlbum(album) : renderList();
-      window.scrollTo(0, 0);
+      window.scrollTo(0, onList ? listScroll : 0);
       app.querySelectorAll('.fade').forEach(function (el) { io ? io.observe(el) : el.classList.add('in'); });
       onScroll();
     }
