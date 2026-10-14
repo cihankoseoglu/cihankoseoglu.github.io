@@ -6,6 +6,10 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode: analytics cookies stay off until the visitor accepts (see /js/consent.js).
+    var consent; try { consent = localStorage.getItem('consent'); } catch (e) {}
+    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+                                 analytics_storage: consent === 'granted' ? 'granted' : 'denied' });
     gtag('js', new Date());
     gtag('config', 'G-1LPFGZTQRZ');
   </script>
@@ -171,7 +175,7 @@
       </blockquote>
     </section>
 
-    <footer>© <span id="y">2026</span> Cihan Koseoglu</footer>
+    <footer>© <span id="y">2026</span> Cihan Koseoglu · <a href="#" onclick="showConsent(); return false;">Cookie settings</a></footer>
   </main>
   <script src="/photography/albums.js"></script>
   <script>
@@ -192,6 +196,7 @@
   </script>
   <script src="js/life.js"></script>
   <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script src="/js/consent.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/konami.js"></script>
 </body>

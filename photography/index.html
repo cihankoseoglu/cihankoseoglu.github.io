@@ -6,6 +6,10 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode: analytics cookies stay off until the visitor accepts (see /js/consent.js).
+    var consent; try { consent = localStorage.getItem('consent'); } catch (e) {}
+    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+                                 analytics_storage: consent === 'granted' ? 'granted' : 'denied' });
     gtag('js', new Date());
     gtag('config', 'G-1LPFGZTQRZ');
   </script>
@@ -143,6 +147,7 @@
     addEventListener('hashchange', route);
     route();
   </script>
+  <script src="/js/consent.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/konami.js"></script>
 </body>
