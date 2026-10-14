@@ -1,16 +1,10 @@
-// Sends site interactions to the GTM dataLayer. GTM turns these into GA4 events.
+// Sends site interactions straight to GA4 as events via gtag.
 // Page views, scrolls and outbound clicks are left to GA4 enhanced measurement.
 (function () {
-  var dl = window.dataLayer = window.dataLayer || [];
-
-  // Every push lists all our keys so values from one event never leak into the next.
-  var KEYS = ['content_type', 'content_id', 'link_location', 'album_id', 'album_title',
-              'album_date', 'photo_count', 'percent_scrolled', 'social_platform'];
   function track(event, params) {
-    var msg = { event: event };
-    KEYS.forEach(function (k) { msg[k] = undefined; });
-    for (var k in params) msg[k] = params[k];
-    dl.push(msg);
+    var out = {};
+    for (var k in params) if (params[k] !== undefined) out[k] = params[k];
+    if (typeof window.gtag === 'function') window.gtag('event', event, out);
   }
   window.siteTrack = track;
 
