@@ -137,7 +137,12 @@
     stillGens = 0;
     if (reduceMotion) draw();
   }
-  canvas.addEventListener('pointerdown', function (e) { drawing = true; canvas.setPointerCapture(e.pointerId); paint(e); });
+  canvas.addEventListener('pointerdown', function (e) {
+    drawing = true;
+    // Capture mouse and pen so a drag can leave the band; a finger is left alone so the page still scrolls.
+    if (e.pointerType !== 'touch') canvas.setPointerCapture(e.pointerId);
+    paint(e);
+  });
   canvas.addEventListener('pointermove', function (e) { if (drawing) paint(e); });
   canvas.addEventListener('pointerup', function () { drawing = false; });
   canvas.addEventListener('pointercancel', function () { drawing = false; });
