@@ -97,6 +97,24 @@
     }
     blockquote cite { display: block; margin-top: 8px; font: 400 14px Inter, system-ui, sans-serif; color: var(--muted); font-style: normal; }
     footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 14px; }
+    .photo-link { display: block; color: var(--text); border-bottom: none; }
+    .photo-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+    .photo-strip img {
+      display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; background: var(--line);
+      filter: saturate(.85); transition: transform .4s cubic-bezier(.2,.7,.2,1), filter .4s cubic-bezier(.2,.7,.2,1);
+    }
+    .photo-cta { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .photo-title { font: 400 30px/1.1 "Instrument Serif", Georgia, serif; transition: color .2s; }
+    .photo-meta { color: var(--muted); font-size: 15px; }
+    .photo-arrow { margin-left: auto; color: var(--accent); font-size: 22px; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+    .photo-link:hover .photo-strip img { filter: saturate(1); }
+    .photo-link:hover .photo-strip img:nth-child(odd) { transform: translateY(-4px); }
+    .photo-link:hover .photo-strip img:nth-child(even) { transform: translateY(4px); }
+    .photo-link:hover .photo-title { color: var(--accent); }
+    .photo-link:hover .photo-arrow { transform: translateX(6px); }
+    @media (prefers-reduced-motion: reduce) {
+      .photo-strip img, .photo-title, .photo-arrow { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -118,6 +136,18 @@
       <p>Engagement Manager at <a href="https://google.com">Google</a>. My job basically is to solve problems for large advertisers and ensure delivery.</p>
       <p>Previously at Google, I led privacy-centric measurement and data for the Turkish market and also served as product lead for Google Analytics 4. Before that I co-founded PeopleApps and worked at CloudOne, Homicity and Zeplin.</p>
       <p>BSc. Computer Engineering and MSc. International Management at Koç University, MIB at the University of South Carolina.</p>
+    </section>
+
+    <section>
+      <h2>Photography</h2>
+      <a class="photo-link" href="/photography/">
+        <div id="photoStrip" class="photo-strip" aria-hidden="true"></div>
+        <div class="photo-cta">
+          <span class="photo-title">See the albums</span>
+          <span id="photoMeta" class="photo-meta">Photo series from my travels and shoots</span>
+          <span class="photo-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+      </a>
     </section>
 
     <section>
@@ -145,6 +175,23 @@
 
     <footer>© <span id="y">2026</span> Cihan Koseoglu</footer>
   </main>
+  <script src="/photography/albums.js"></script>
+  <script>
+    (function () {
+      var albums = window.ALBUMS || [];
+      var strip = document.getElementById('photoStrip');
+      if (!albums.length) { strip.remove(); return; }
+      albums.slice(0, 4).forEach(function (a) {
+        var img = document.createElement('img');
+        img.src = a.cover || a.photos[0].src;
+        img.alt = '';
+        img.loading = 'lazy';
+        strip.appendChild(img);
+      });
+      var n = albums.reduce(function (t, a) { return t + a.photos.length; }, 0);
+      document.getElementById('photoMeta').textContent = albums.length + ' albums, ' + n + ' photos';
+    })();
+  </script>
   <script src="js/life.js"></script>
   <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
