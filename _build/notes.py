@@ -17,20 +17,39 @@ The file name (minus .md) is the URL: _build/notes/consent-mode.md becomes /note
 Drafts live in _build/notes-drafts/ and are never published; move a file into _build/notes/ to publish it.
 
 This writes notes/<slug>/index.html for every note and notes/index.html, puts the latest three
-on the home page (between the notes:start and notes:end comments in index.html), and rewrites
-sitemap.xml. With no notes, the notes/ folder is removed and the home page shows nothing.
+on the home page (between the notes:start and notes:end comments in index.html), and runs
+_build/shared.py, which inlines the shared CSS and rewrites sitemap.xml. With no notes, the notes/ folder is removed and the home page shows nothing.
 Supported markdown: # headings, paragraphs, - and 1. lists, > quotes, ``` code blocks,
 **bold**, *italic*, `code`, [links](url) and ![images](url).
 No dependencies beyond Python 3.
 """
-import datetime, html, os, re, shutil, sys
+import datetime, html, json, os, re, shutil, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(REPO, '_build', 'notes')
 OUT = os.path.join(REPO, 'notes')
 HOME = os.path.join(REPO, 'index.html')
-SITEMAP = os.path.join(REPO, 'sitemap.xml')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import shared  # noqa: E402
 SITE = 'https://www.cihankoseoglu.com'
+
+
+def dims(src):
+    """ width="..." height="..." for a local PNG or JPEG, so the page doesn't jump while it loads."""
+    path = os.path.join(REPO, src.lstrip('/')) if src.startswith('/') else None
+    if not path or not os.path.exists(path):
+        return ''
+    with open(path, 'rb') as fh:
+        data = fh.read(1 << 20)
+    if data[:8] == b'\x89PNG\r\n\x1a\n':
+        return f' width="{int.from_bytes(data[16:20], "big")}" height="{int.from_bytes(data[20:24], "big")}"'
+    i = 2
+    while data[:2] == b'\xff\xd8' and i < len(data) - 9:
+        marker, n = data[i + 1], int.from_bytes(data[i + 2:i + 4], 'big')
+        if marker in (0xC0, 0xC1, 0xC2):
+            return f' width="{int.from_bytes(data[i + 7:i + 9], "big")}" height="{int.from_bytes(data[i + 5:i + 7], "big")}"'
+        i += 2 + n
+    return ''
 
 
 def inline(text):
@@ -43,7 +62,7 @@ def inline(text):
             continue
         s = html.escape(part, quote=False)  # & < > are escaped here, so URLs below only need their quotes escaped
         q = lambda v: v.replace('"', '&quot;')
-        s = re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)', lambda m: f'<img src="{q(m[2])}" alt="{q(m[1])}" loading="lazy">', s)
+        s = re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)', lambda m: f'<img src="{q(m[2])}" alt="{q(m[1])}"{dims(m[2])} loading="lazy">', s)
         s = re.sub(r'\[([^\]]+)\]\(([^)\s]+)\)', lambda m: f'<a href="{q(m[2])}">{m[1]}</a>', s)
         s = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', s)
         s = re.sub(r'(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])', r'<em>\1</em>', s)
@@ -127,7 +146,6 @@ def nice_date(d):
 HEAD = '''<!doctype html>
 <html lang="en">
 <head>
-  <script src="/js/gtag.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
@@ -136,14 +154,21 @@ HEAD = '''<!doctype html>
   <meta property="og:description" content="{description}">
   <meta property="og:url" content="{url}">
   <meta property="og:type" content="{og_type}">
-  <meta name="twitter:card" content="summary">
-  <link rel="canonical" href="{url}">
+  <meta property="og:site_name" content="Cihan Koseoglu">
+  <meta property="og:image" content="https://www.cihankoseoglu.com/images/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="robots" content="max-image-preview:large">
+{extra}  <link rel="canonical" href="{url}">
   <meta name="theme-color" content="#faf8f5">
-  <link rel="icon" href="/images/favicon.ico">
+  <link rel="icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/iosevka-regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/site.css">
-  <link rel="stylesheet" href="/notes/notes.css">
+  <!-- shared:start -->
+  <!-- shared:end -->
+  <style>
+{css}  </style>
 </head>
 <body>
   <main>
@@ -152,14 +177,12 @@ HEAD = '''<!doctype html>
 
 FOOT = '''    <footer>© {year} Cihan Koseoglu · <a href="#" onclick="showConsent(); return false;">Cookie settings</a></footer>
   </main>
-  <script src="/js/consent.js"></script>
-  <script src="/js/analytics.js"></script>
-  <script src="/js/konami.js"></script>
+  <script src="/js/site.js"></script>
 </body>
 </html>
 '''
 
-CSS = '''/* Notes pages. Written by _build/notes.py; edit the CSS in that script. */
+CSS = '''/* Notes pages. Inlined by _build/notes.py; edit the CSS in that script. */
 :root { --bg: #faf8f5; }
 body { background: var(--bg); font-size: 17px; line-height: 1.7; }
 main { max-width: 640px; margin: 0 auto; padding: 48px 20px 64px; }
@@ -204,18 +227,24 @@ def build_pages(notes):
     shutil.rmtree(OUT, ignore_errors=True)
     if not notes:
         return
-    write(os.path.join(OUT, 'notes.css'), CSS)
     for n in notes:
         url = f'{SITE}/notes/{n["slug"]}/'
+        ld = {'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': n['title'], 'url': url,
+              'datePublished': n['date'].isoformat(), 'description': n['description'] or n['title'],
+              'author': {'@type': 'Person', '@id': SITE + '/#person', 'name': 'Cihan Koseoglu', 'url': SITE + '/'}}
+        extra = (f'  <meta property="article:published_time" content="{n["date"].isoformat()}">\n'
+                 f'  <meta property="article:author" content="{SITE}/">\n'
+                 f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n')
         page = HEAD.format(title=esc(n['title']) + ' · Cihan Koseoglu', og_title=esc(n['title']), url=url, og_type='article',
-                           description=esc(n['description'] or n['title']),
+                           description=esc(n['description'] or n['title']), extra=extra, css=CSS,
                            crumb='<span>/</span><a href="/notes/">Notes</a>')
         page += (f'    <article>\n      <h1>{esc(n["title"])}</h1>\n'
                  f'      <p class="date"><time datetime="{n["date"].isoformat()}">{nice_date(n["date"])}</time></p>\n'
                  f'{n["body"]}\n    </article>\n')
         write(os.path.join(OUT, n['slug'], 'index.html'), page + FOOT.format(year=year))
     page = HEAD.format(title='Notes · Cihan Koseoglu', og_title='Notes', url=f'{SITE}/notes/', og_type='website',
-                       description='Notes by Cihan Koseoglu on marketing, data, privacy, measurement, AI and code.', crumb='')
+                       description='Notes by Cihan Koseoglu on marketing, data, privacy, measurement, AI and code.',
+                       extra='', css=CSS, crumb='')
     page += '    <h1>Notes</h1>\n    <ul class="list">\n'
     for n in notes:
         page += (f'      <li><a href="/notes/{n["slug"]}/">{esc(n["title"])}</a>'
@@ -240,23 +269,12 @@ def update_home(notes):
         fh.write(text)
 
 
-def update_sitemap(notes):
-    urls = [(f'{SITE}/', None), (f'{SITE}/photography/', None)]
-    if notes:
-        urls.append((f'{SITE}/notes/', notes[0]['date']))
-        urls += [(f'{SITE}/notes/{n["slug"]}/', n['date']) for n in notes]
-    body = ''.join(f'  <url><loc>{u}</loc>' + (f'<lastmod>{d.isoformat()}</lastmod>' if d else '') + '</url>\n'
-                   for u, d in urls)
-    write(SITEMAP, '<?xml version="1.0" encoding="UTF-8"?>\n'
-                   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + body + '</urlset>\n')
-
-
 def main():
     files = sorted(f for f in os.listdir(SRC) if f.endswith('.md')) if os.path.isdir(SRC) else []
     notes = sorted((read_note(os.path.join(SRC, f)) for f in files), key=lambda n: (n['date'], n['slug']), reverse=True)
     build_pages(notes)
     update_home(notes)
-    update_sitemap(notes)
+    shared.build()  # inlines the shared CSS and tag into the new pages, rewrites sitemap.xml
     print(f'{len(notes)} note(s) published' + ''.join(f'\n  /notes/{n["slug"]}/  {n["date"]}  {n["title"]}' for n in notes))
 
 
