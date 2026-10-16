@@ -6,34 +6,70 @@
   --line: #e6e1da;
   --accent: #8a2be2;
   --accent-soft: #f1e8fb;
-  /* One typeface everywhere. --sans and --serif are kept as names so page CSS doesn't change. */
-  --sans: Iosevka, ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One typeface everywhere. --sans and --serif are kept as names so page CSS doesn't change.
+     The "Iosevka on ..." faces are local fonts scaled to Iosevka's width, so nothing moves when it loads. */
+  --sans: Iosevka, "Iosevka on Menlo", "Iosevka on Consolas", "Iosevka on DejaVu", ui-monospace, monospace;
   --serif: var(--sans);
   --mono: var(--sans);
 }
 
-/* Iosevka 34.9.0 from the official release (SIL OFL, see fonts/IOSEVKA-LICENSE.md).
-   Browsers only download the weights a page actually uses. */
+/* Iosevka 34.9.0 from the official release (SIL OFL, see fonts/IOSEVKA-LICENSE.txt).
+   fonts/*.woff2 are Latin subsets (about 32 KB each, made with fontTools pyftsubset, keeping
+   calt, hinting, glyph names and the name table). fonts/full/ holds the complete files, which a
+   browser only downloads if a page shows a character outside the subset. */
+@font-face {
+  font-family: Iosevka; font-style: normal; font-weight: 400; font-display: swap;
+  src: url(/fonts/full/iosevka-regular.woff2) format("woff2");
+  unicode-range: U+180-1FFF, U+2070-20AB, U+20AD-2121, U+2123-218F, U+2194-2211, U+2213-10FFFF;
+}
 @font-face {
   font-family: Iosevka; font-style: normal; font-weight: 400; font-display: swap;
   src: url(/fonts/iosevka-regular.woff2) format("woff2");
+  unicode-range: U+0000-017F, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212;
+}
+@font-face {
+  font-family: Iosevka; font-style: normal; font-weight: 500; font-display: swap;
+  src: url(/fonts/full/iosevka-medium.woff2) format("woff2");
+  unicode-range: U+180-1FFF, U+2070-20AB, U+20AD-2121, U+2123-218F, U+2194-2211, U+2213-10FFFF;
 }
 @font-face {
   font-family: Iosevka; font-style: normal; font-weight: 500; font-display: swap;
   src: url(/fonts/iosevka-medium.woff2) format("woff2");
+  unicode-range: U+0000-017F, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212;
+}
+@font-face {
+  font-family: Iosevka; font-style: normal; font-weight: 600; font-display: swap;
+  src: url(/fonts/full/iosevka-semibold.woff2) format("woff2");
+  unicode-range: U+180-1FFF, U+2070-20AB, U+20AD-2121, U+2123-218F, U+2194-2211, U+2213-10FFFF;
 }
 @font-face {
   font-family: Iosevka; font-style: normal; font-weight: 600; font-display: swap;
   src: url(/fonts/iosevka-semibold.woff2) format("woff2");
+  unicode-range: U+0000-017F, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212;
+}
+@font-face {
+  font-family: Iosevka; font-style: normal; font-weight: 700; font-display: swap;
+  src: url(/fonts/full/iosevka-bold.woff2) format("woff2");
+  unicode-range: U+180-1FFF, U+2070-20AB, U+20AD-2121, U+2123-218F, U+2194-2211, U+2213-10FFFF;
 }
 @font-face {
   font-family: Iosevka; font-style: normal; font-weight: 700; font-display: swap;
   src: url(/fonts/iosevka-bold.woff2) format("woff2");
+  unicode-range: U+0000-017F, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212;
+}
+@font-face {
+  font-family: Iosevka; font-style: italic; font-weight: 400; font-display: swap;
+  src: url(/fonts/full/iosevka-italic.woff2) format("woff2");
+  unicode-range: U+180-1FFF, U+2070-20AB, U+20AD-2121, U+2123-218F, U+2194-2211, U+2213-10FFFF;
 }
 @font-face {
   font-family: Iosevka; font-style: italic; font-weight: 400; font-display: swap;
   src: url(/fonts/iosevka-italic.woff2) format("woff2");
+  unicode-range: U+0000-017F, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212;
 }
+@font-face { font-family: "Iosevka on Menlo"; src: local("Menlo"); size-adjust: 83.05%; ascent-override: 116.2%; descent-override: 25.9%; line-gap-override: 0%; }
+@font-face { font-family: "Iosevka on Consolas"; src: local("Consolas"); size-adjust: 90.94%; ascent-override: 106.1%; descent-override: 23.6%; line-gap-override: 0%; }
+@font-face { font-family: "Iosevka on DejaVu"; src: local("DejaVu Sans Mono"); size-adjust: 83.05%; ascent-override: 116.2%; descent-override: 25.9%; line-gap-override: 0%; }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
