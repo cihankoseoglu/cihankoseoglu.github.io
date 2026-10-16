@@ -6,7 +6,7 @@
 
   var css = '.consent{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:520px;margin:0 auto;' +
     'display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line,#e6e1da);' +
-    'border-radius:12px;background:var(--bg,#faf8f5);color:var(--text,#1d1b19);font:400 14px/1.4 Inter,system-ui,sans-serif;' +
+    'border-radius:12px;background:var(--bg,#faf8f5);color:var(--text,#1d1b19);font:400 14px/1.4 var(--sans,system-ui),system-ui,sans-serif;' +
     'box-shadow:0 6px 24px rgba(0,0,0,.08)}' +
     '.consent p{margin:0;flex:1 1 220px}.consent>span{display:flex;gap:8px;margin-left:auto}' +
     '.consent button{font:inherit;padding:6px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--line,#e6e1da);' +
