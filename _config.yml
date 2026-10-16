@@ -1,0 +1,9 @@
+# GitHub Pages runs this site through Jekyll. Every page is plain HTML, so Jekyll only copies
+# files. No theme, so it doesn't add a stylesheet or turn stray markdown into themed pages.
+theme: null
+exclude:
+  - README.md
+  - "site-*.md"
+  - _build
+  - css
+  - js/gtag.js

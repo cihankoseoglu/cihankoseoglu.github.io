@@ -1,0 +1,60 @@
+# Builds and deploys the site to GitHub Pages. Same Jekyll build as GitHub's default, with one
+# difference: every file keeps the date of the last commit that changed it, instead of the time
+# of the deploy. Unchanged files then look unchanged to browsers after a deploy, so returning
+# visitors can revalidate fonts and photos instead of downloading them again.
+#
+# Takes effect once the repository's Settings > Pages > Source is set to "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Give every file the date of its last commit
+        run: |
+          git log --format='format:%ct' --name-only --diff-filter=AMR --no-renames HEAD | python3 -c '
+          import os, sys
+          seen, t = set(), None
+          for line in sys.stdin:
+              line = line.strip()
+              if not line:
+                  continue
+              if line.isdigit():
+                  t = int(line)
+              elif line not in seen and os.path.exists(line):
+                  seen.add(line)
+                  os.utime(line, (t, t))
+          print(len(seen), "files dated")'
+      - uses: actions/configure-pages@v5
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
