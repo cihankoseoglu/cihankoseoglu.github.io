@@ -141,7 +141,7 @@ HEAD = '''<!doctype html>
   <meta name="theme-color" content="#faf8f5">
   <link rel="icon" href="/images/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/iosevka-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <link rel="stylesheet" href="/notes/notes.css">
 </head>
@@ -175,7 +175,7 @@ article h3, article h4 { font-size: 22px; }
 article p, article ul, article ol { margin: 0 0 18px; }
 article li { margin-bottom: 6px; }
 article img { max-width: 100%; height: auto; display: block; margin: 28px 0; }
-article code { font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #f1ede7; padding: 1px 5px; border-radius: 4px; }
+article code { font: 15px/1.5 var(--mono); background: #f1ede7; padding: 1px 5px; border-radius: 4px; }
 article pre { background: #f1ede7; padding: 16px; overflow-x: auto; border-radius: 6px; margin: 0 0 18px; }
 article pre code { background: none; padding: 0; }
 article blockquote { margin: 0 0 18px; padding: 2px 0 2px 20px; border-left: 2px solid var(--accent); color: var(--muted); }
