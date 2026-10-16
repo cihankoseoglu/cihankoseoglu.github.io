@@ -38,8 +38,8 @@
       .row li { flex: none; }
     }
     .cover { display: block; position: relative; margin: 0 clamp(16px, 4vw, 56px) 14vh; }
-    /* Covers keep their own shape: full width, or narrower when 78vh tall would be too much. --r is width / height. */
-    .cover img { display: block; width: min(100%, calc(78vh * var(--r))); height: auto; aspect-ratio: var(--r); background: var(--line); }
+    /* Covers fill the full width at 78vh tall, cropped to fit. */
+    .cover img { display: block; width: 100%; height: 78vh; object-fit: cover; background: var(--line); }
     .cover .label { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; }
     .cover .label h2 { font-size: clamp(32px, 5vw, 56px); margin: 0; line-height: 1; transition: color .2s; }
     .cover:hover h2 { color: var(--accent); font-style: italic; }
@@ -149,9 +149,9 @@
         el('p', null, 'Albums, newest first. Click one to read it from start to finish.'),
         row));
       ALBUMS.forEach(function (a) {
-        var p = a.photos[0], r = (p.w / p.h).toFixed(4);
-        var img = el('img', { src: a.cover, alt: 'Cover of the ' + a.title + ' album', loading: 'lazy', style: '--r:' + r,
-                              width: p.w, height: p.h, sizes: 'min(calc(100vw - 32px), calc(78vh * ' + r + '))' });
+        var p = a.photos[0];
+        var img = el('img', { src: a.cover, alt: 'Cover of the ' + a.title + ' album', loading: 'lazy',
+                              width: p.w, height: p.h, sizes: 'calc(100vw - 32px)' });
         if (a.thumb) img.srcset = a.thumb + ' ' + Math.round(400 * Math.min(1, p.w / p.h)) + 'w, ' + a.cover + ' ' + Math.round(1600 * Math.min(1, p.w / p.h)) + 'w';
         app.appendChild(el('a', { className: 'cover fade', href: '#/' + a.slug }, img,
           el('div', { className: 'label' }, el('h2', { className: 'serif' }, a.title), el('span', null, meta(a)))));
